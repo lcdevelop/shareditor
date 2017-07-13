@@ -2,3 +2,5 @@
 logs
 migrations
 .idea
+commons/ossutils.py
+shareditor/settings.py

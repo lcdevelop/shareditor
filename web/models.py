@@ -9,9 +9,21 @@ class Subject(models.Model):
     introduce = models.CharField(max_length=255, verbose_name='类别简介')
     image = models.ImageField(verbose_name='类别图片')
 
+    class Meta:
+        verbose_name_plural = '类别'
+
+    def __unicode__(self):
+        return self.name
+
 
 class Tag(models.Model):
     name = models.CharField(max_length=255, verbose_name='标签名称')
+
+    class Meta:
+        verbose_name_plural = '标签'
+
+    def __unicode__(self):
+        return self.name
 
 
 class BlogPost(models.Model):
@@ -20,5 +32,11 @@ class BlogPost(models.Model):
     create_time = models.DateTimeField(verbose_name='创建时间')
     subject = models.ForeignKey(Subject, verbose_name='类别', null=True)
     tags = models.ManyToManyField(Tag, verbose_name='标签')
+
+    class Meta:
+        verbose_name_plural = '文章'
+
+    def __unicode__(self):
+        return self.title
 
 
