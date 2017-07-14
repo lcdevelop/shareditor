@@ -2,9 +2,10 @@
 from __future__ import unicode_literals
 
 from django.shortcuts import render
-from django.http import HttpResponse
-from models import BlogPost, Subject
+from models import BlogPost, Subject, Tag
 
 
 def index(request):
-    return HttpResponse('Hello World!')
+    tags = Tag.objects.all()
+    latest_blog_posts = BlogPost.objects.order_by('create_time')[0:5]
+    return render(request, 'web/index.html', {'tags': tags, 'latest_blog_posts': latest_blog_posts})

@@ -1,0 +1,35 @@
+{% extends "web/base.html" %}
+
+{% block title %}
+{% endblock %}
+
+{% block body %}
+
+    <div class="row jumbotron" style="margin-right: 0">
+        <div class="col-md-1 col-xs-1"></div>
+        <div class="col-md-10 col-xs-10"><h1>Welcome Big Data ITors!</h1></div>
+        <div class="col-md-1 col-xs-1"></div>
+    </div>
+
+    <div class="row" style="margin-right: 0">
+        <div class="col-sm-1 col-xs-1"></div>
+        {% for tag in tags %}
+            <div class="col-sm-2 col-xs-12">
+                <div class="thumbnail">
+                    <img src="{{ tag.image }}" alt="tag">
+                    <div class="caption">
+                        <h3>{{ tag }}({{ tag.blogpost_set.count }})</h3>
+                        <p>
+                            {% for blogpost in tag.blogpost_set.all %}
+                                {{ blogpost.title }}
+                            {% endfor %}
+                        </p>
+                        <h5>更多>>></h5>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+        <div class="col-sm-1 col-xs-1"></div>
+    </div>
+
+{% endblock %}
