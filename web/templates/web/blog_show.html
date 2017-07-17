@@ -1,0 +1,115 @@
+{% extends "web/base.html" %}
+
+{% block title %}
+    {{ blog_post }} - SharEDITor - 关注大数据技术
+{% endblock %}
+
+{% block body %}
+
+    <div class="row">
+        <div class="col-sm-2 col-xs-1"></div>
+        <div class="col-sm-6 col-xs-10">
+            <div class="row">
+                <div class="col-sm-12 col-xs-12">
+                    <div class="row">
+                        <h1>{{ blogpost.title }}</h1>
+                    </div>
+                    <div class="row">
+                        <a class="btn btn-info btn-xs">{{ blog_post.subject.name }}</a>
+                        {% for tag in blog_post.tags.all %}
+                            <a class="btn btn-warning btn-xs" href="{% url 'blog_list_by_tag' %}?tagname={{ tag }}">
+                                {{ tag.name }}
+                            </a>
+                        {% endfor %}
+                        <small>发表于 {{ blog_post.create_time|date:"Y-m-d H:i:s" }}</small>
+                        <small>阅读{{ blog_post.pv }}次</small>
+                    </div>
+
+                    <div class="row">
+                        <hr/>
+                    </div>
+
+                    <div class="row">
+                        <div class="row">
+                            <div class="col-sm-12 col-xs-12">
+                                <img style="width: 100%; height: 100%;" src="{{ blog_post.image }}">
+                            </div>
+                        </div>
+                        {{ blog_post.abstract }}
+                        <br />
+                        {{ blog_post.body }}
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-6 col-xs-6">
+                    <span style="color:#aaaaaa;">前一篇:</span>
+                    {% if prev_blog_post.first != null %}
+                        <a href="">{{ prev_blog_post.first }}</a>
+                    {% endif %}
+                </div>
+                <div class="text-right col-sm-6 col-xs-6">
+                    <span style="color:#aaaaaa;">后一篇:</span>
+                    {% if next_blog_post.first != null %}
+                        <a href="">{{ next_blog_post.first }}</a>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!--PC和WAP自适应版-->
+            <div id="SOHUCS" sid="{{ blog_post.id }}" ></div>
+            <script type="text/javascript">
+             (function(){
+                    var appid = 'cysV8S2ux';
+                    var conf = 'prod_bd659405e413a4b27a3568e27185b632';
+                    var width = window.innerWidth || document.documentElement.clientWidth;
+                    if (width < 960) {
+                        window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="http://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("http://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })();
+            </script>
+        </div>
+
+        <div class="col-sm-2 hidden-xs">
+            <br/>
+            <div class="row">
+                <div class="col-sm-8">
+                    <h4>官方微信公众号</h4>
+                    <a href="http://shareditor-shareditor.oss-cn-beijing.aliyuncs.com/dynamic/weixinpub.jpg">
+                        <img width="90%" height="90%" src="http://shareditor-shareditor.oss-cn-beijing.aliyuncs.com/dynamic/weixinpub.jpg">
+                    </a>
+                </div>
+                <div class="col-sm-1">
+                    <div class="row">
+                        <a href="https://github.com/warmheartli">
+                            <div class="fa fa-github fa-3x" style="margin-top: 20px;"></div>
+                        </a>
+                    </div>
+                    <div class="row">
+                        <a href="http://weibo.com/chuangwanglaile">
+                            <div class="fa fa-weibo fa-3x" style="margin-top: 20px;"></div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <hr/>
+            <h4>
+                {% for tag in blog_post.tags.all %}
+                    系列:{{ tag.name }}
+                {% endfor %}
+            </h4>
+            <div style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">
+                {% for tag_blog_post in tag_blog_posts %}
+                    {% if tag_blog_post.id == blog_post.id %}
+                        <h6 style="color: red;">{{ tag_blog_post }}</h6>
+                    {% else %}
+                        <h6><a href="{% url 'blog_show' %}?blogId={{ tag_blog_post.id }}">{{ tag_blog_post }}</a></h6>
+                    {% endif %}
+                {% endfor %}
+            </div>
+            <h4>全部系列</h4>
+            {% for tag in tags %}
+                <h6><a href="{% url 'blog_list_by_tag' %}?tagname={{ tag.name }}">{{ tag.name }}</a></h6>
+            {% endfor %}
+        </div>
+    </div>
+
+{% endblock %}

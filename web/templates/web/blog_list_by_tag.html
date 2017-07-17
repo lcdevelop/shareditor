@@ -1,0 +1,26 @@
+{% extends "web/base.html" %}
+
+{% block title %}
+    {{ tag_name }} - SharEDITor - 关注大数据技术
+{% endblock %}
+
+{% block body %}
+
+    <div class="row" style="margin-right: 0">
+        <div class="col-sm-3 col-xs-1"></div>
+        <div class="col-sm-6 col-xs-10">
+            <h1>{{ tag_name }}</h1>
+        </div>
+        <div class="col-sm-3 col-xs-1"></div>
+    </div>
+
+    <div class="row" style="margin-right: 0">
+        <div class="col-sm-3 col-xs-1"></div>
+        <div class="col-sm-6 col-xs-10">
+            {% for blog_post in blog_posts %}
+                <h4><a href="{% url 'blog_show' %}?blogId={{ blog_post.id }}">{{ blog_post }}</a>({{ blog_post.create_time|date:'Y-m-d' }})</h4>
+            {% endfor %}
+        </div>
+    </div>
+
+{% endblock %}

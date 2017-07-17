@@ -16,15 +16,17 @@
         {% for tag in tags %}
             <div class="col-sm-2 col-xs-12">
                 <div class="thumbnail">
-                    <img src="{{ tag.image }}" alt="tag">
+                    <a href="{% url 'blog_list_by_tag' %}?tagname={{ tag.name }}"><img src="{{ tag.image }}" alt="tag"></a>
                     <div class="caption">
-                        <h3>{{ tag }}({{ tag.blogpost_set.count }})</h3>
+                        <h3><a href="{% url 'blog_list_by_tag' %}?tagname={{ tag.name }}">{{ tag.name }}({{ tag.blogpost_set.count }})</a></h3>
                         <p>
-                            {% for blogpost in tag.blogpost_set.all %}
-                                {{ blogpost.title }}
+                            {% for blog_post in tag.blogpost_set.all %}
+                                <a href="{% url 'blog_show' %}?blogId={{ blog_post.id }}">
+                                    {{ blog_post.title }}
+                                </a>
                             {% endfor %}
                         </p>
-                        <h5>更多>>></h5>
+                        <h5><a href="{% url 'blog_list_by_tag' %}?tagname={{ tag.name }}">更多>>></a></h5>
                     </div>
                 </div>
             </div>

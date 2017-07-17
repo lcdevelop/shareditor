@@ -19,5 +19,7 @@ from web import views
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^$', views.index)
+    url(r'^$', views.index, name='homepage'),
+    url(r'^bloglistbytag', views.blog_list_by_tag, name='blog_list_by_tag'),
+    url(r'^blogshow', views.blog_show, name='blog_show')
 ]
