@@ -1,5 +1,4 @@
 {% extends "web/base.html" %}
-
 {% block title %}
 {% endblock %}
 
@@ -12,26 +11,33 @@
     </div>
 
     <div class="row" style="margin-right: 0">
-        <div class="col-sm-1 col-xs-1"></div>
-        {% for tag in tags %}
-            <div class="col-sm-2 col-xs-12">
-                <div class="thumbnail">
-                    <a href="{% url 'blog_list_by_tag' %}?tagname={{ tag.name }}"><img src="{{ tag.image }}" alt="tag"></a>
-                    <div class="caption">
-                        <h3><a href="{% url 'blog_list_by_tag' %}?tagname={{ tag.name }}">{{ tag.name }}({{ tag.blogpost_set.count }})</a></h3>
-                        <p>
-                            {% for blog_post in tag.blogpost_set.all %}
-                                <a href="{% url 'blog_show' %}?blogId={{ blog_post.id }}">
-                                    {{ blog_post.title }}
-                                </a>
-                            {% endfor %}
-                        </p>
-                        <h5><a href="{% url 'blog_list_by_tag' %}?tagname={{ tag.name }}">更多>>></a></h5>
+        <div class="col-sm-1"></div>
+        <div class="col-sm-10">
+            <div class="row">
+                {% for tag in tags %}
+                    <div class="col-sm-3">
+                        <div class="thumbnail">
+                            <a href="{% url 'blog_list_by_tag' %}?tagname={{ tag.name }}"><img src="{{ tag.image }}" alt="tag"></a>
+                            <div class="caption">
+                                <h3><a href="{% url 'blog_list_by_tag' %}?tagname={{ tag.name }}">{{ tag.name }}({{ tag.blogpost_set.count }})</a></h3>
+                                <p>
+                                    {% for blog_post in tag.get_latest_blogpost.all %}
+                                        {% if forloop.counter < 5 %}
+                                            <a href="{% url 'blog_show' %}?blogId={{ blog_post.id }}">
+                                                {{ blog_post.get_simple_title }}
+                                            </a>
+                                            <br />
+                                        {% endif %}
+                                    {% endfor %}
+                                </p>
+                                <h5><a href="{% url 'blog_list_by_tag' %}?tagname={{ tag.name }}">更多>>></a></h5>
+                            </div>
+                        </div>
                     </div>
-                </div>
+                {% endfor %}
             </div>
-        {% endfor %}
-        <div class="col-sm-1 col-xs-1"></div>
+        </div>
+        <div class="col-sm-1"></div>
     </div>
 
 {% endblock %}

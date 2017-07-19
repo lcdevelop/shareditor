@@ -12,7 +12,7 @@
             <div class="row">
                 <div class="col-sm-12 col-xs-12">
                     <div class="row">
-                        <h1>{{ blogpost.title }}</h1>
+                        <h1>{{ blog_post.title }}</h1>
                     </div>
                     <div class="row">
                         <a class="btn btn-info btn-xs">{{ blog_post.subject.name }}</a>
@@ -37,21 +37,25 @@
                         </div>
                         {{ blog_post.abstract }}
                         <br />
-                        {{ blog_post.body }}
+                        {{ blog_post.body|safe }}
                     </div>
                 </div>
             </div>
             <div class="row">
                 <div class="col-sm-6 col-xs-6">
                     <span style="color:#aaaaaa;">前一篇:</span>
-                    {% if prev_blog_post.first != null %}
-                        <a href="">{{ prev_blog_post.first }}</a>
+                    {% if prev_blog_post != null %}
+                        <a href="{% url 'blog_show' %}?blogId={{ prev_blog_post.id }}">{{ prev_blog_post.title }}</a>
+                    {% else %}
+                        <span style="color:#aaaaaa;">没有了</span>
                     {% endif %}
                 </div>
                 <div class="text-right col-sm-6 col-xs-6">
                     <span style="color:#aaaaaa;">后一篇:</span>
-                    {% if next_blog_post.first != null %}
-                        <a href="">{{ next_blog_post.first }}</a>
+                    {% if next_blog_post != null %}
+                        <a href="{% url 'blog_show' %}?blogId={{ next_blog_post.id }}">{{ next_blog_post.title }}</a>
+                    {% else %}
+                        <span style="color:#aaaaaa;">没有了</span>
                     {% endif %}
                 </div>
             </div>
