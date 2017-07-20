@@ -103,9 +103,9 @@
             <div style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">
                 {% for tag_blog_post in tag_blog_posts %}
                     {% if tag_blog_post.id == blog_post.id %}
-                        <h6 style="color: red;">{{ tag_blog_post }}</h6>
+                        <h6 style="color: red;">{{ tag_blog_post.get_simple_title }}</h6>
                     {% else %}
-                        <h6><a href="{% url 'blog_show' %}?blogId={{ tag_blog_post.id }}">{{ tag_blog_post }}</a></h6>
+                        <h6><a href="{% url 'blog_show' %}?blogId={{ tag_blog_post.id }}">{{ tag_blog_post.get_simple_title }}</a></h6>
                     {% endif %}
                 {% endfor %}
             </div>
