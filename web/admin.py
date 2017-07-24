@@ -10,7 +10,9 @@ BucketName = 'shareditor-shareditor'
 
 
 class BlogPostAdmin(admin.ModelAdmin):
-    list_display = ('title', 'create_time', 'subject')
+    list_display = ('id', 'title', 'create_time', 'subject')
+    list_display_links = ('title',)
+    search_fields = ('title', 'body',)
 
     def save_model(self, request, obj, form, change):
         if 'image' in request.FILES:

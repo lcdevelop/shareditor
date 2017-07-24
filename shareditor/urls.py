@@ -13,7 +13,9 @@ Including another URLconf
     1. Import the include() function: from django.conf.urls import url, include
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
-from django.conf.urls import url
+from django.conf.urls import url, include
+from django.conf.urls.static import static
+from django.conf import settings
 from django.contrib import admin
 from web import views
 
@@ -21,5 +23,8 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^$', views.index, name='homepage'),
     url(r'^bloglistbytag/', views.blog_list_by_tag, name='blog_list_by_tag'),
-    url(r'^blogshow', views.blog_show, name='blog_show')
+    url(r'^blogshow', views.blog_show, name='blog_show'),
+    url(r'^ckeditor/', include('ckeditor_uploader.urls'))
 ]
+
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

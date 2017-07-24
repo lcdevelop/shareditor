@@ -1,7 +1,14 @@
 {% extends "web/base.html" %}
+{% load static %}
 
 {% block title %}
     {{ blog_post }} - SharEDITor - 关注大数据技术
+{% endblock %}
+
+{% block head %}
+    <link href="{% static 'ckeditor/ckeditor/plugins/codesnippet/lib/highlight/styles/atelier-dune.dark.css' %}" rel="stylesheet">
+    <script src="{% static 'ckeditor/ckeditor/plugins/codesnippet/lib/highlight/highlight.pack.js' %}"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
 {% endblock %}
 
 {% block body %}

@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 
 from django.db import models
+from ckeditor_uploader.fields import RichTextUploadingField
 
 
 class Subject(models.Model):
@@ -35,7 +36,7 @@ class BlogPost(models.Model):
     title = models.CharField(max_length=255, verbose_name='文章标题')
     image = models.ImageField(max_length=255, verbose_name='文章图片', null=True)
     abstract = models.CharField(max_length=255, verbose_name='文章摘要', null=True)
-    body = models.TextField(verbose_name='文章内容')
+    body = RichTextUploadingField(config_name='default', verbose_name='文章内容')
     create_time = models.DateTimeField(verbose_name='创建时间')
     subject = models.ForeignKey(Subject, verbose_name='类别', null=True)
     tags = models.ManyToManyField(Tag, verbose_name='标签', null=True)
