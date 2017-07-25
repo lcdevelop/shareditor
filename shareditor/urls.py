@@ -24,7 +24,8 @@ urlpatterns = [
     url(r'^$', views.index, name='homepage'),
     url(r'^bloglistbytag/', views.blog_list_by_tag, name='blog_list_by_tag'),
     url(r'^blogshow', views.blog_show, name='blog_show'),
-    url(r'^ckeditor/', include('ckeditor_uploader.urls'))
+    url(r'^ckeditor/', include('ckeditor_uploader.urls')),
+    url(r'^uploader/body_upload', views.body_upload, name='body_upload'),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

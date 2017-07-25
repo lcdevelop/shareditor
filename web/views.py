@@ -3,8 +3,11 @@ from __future__ import unicode_literals
 
 from django.http import HttpResponse
 from django.shortcuts import render
+
+from commons.ossutils import upload_oss
 from models import BlogPost, Subject, Tag
 
+BucketName = 'shareditor-shareditor'
 
 def index(request):
     tags = Tag.objects.all()
@@ -44,3 +47,15 @@ def blog_show(request):
                                                       'prev_blog_post': prev_blog_post, 'next_blog_post': next_blog_post})
     else:
         return HttpResponse('404')
+
+
+def body_upload(request):
+    print request.FILES
+    if 'upload' in request.FILES:
+        image_name = request.FILES['upload'].name
+        image_content = request.FILES['upload'].read()
+
+        url = upload_oss(BucketName, image_name, image_content)
+        if url:
+            return render(request, 'web/body_upload.html', {'url': url})
+    return HttpResponse('upload fail')
