@@ -12,6 +12,7 @@ from models import BlogPost, Subject, Tag
 
 BucketName = 'shareditor-shareditor'
 
+
 def index(request):
     tags = Tag.objects.all()
     latest_blog_posts = BlogPost.objects.order_by('create_time').reverse()[0:5]

@@ -22,7 +22,7 @@
                                 <h3><a href="{% url 'blog_list_by_tag' %}?tagname={{ tag.name }}">{{ tag.name }}({{ tag.blogpost_set.count }})</a></h3>
                                 <p>
                                     {% for blog_post in tag.get_latest_blogpost.all %}
-                                        {% if forloop.counter < 5 %}
+                                        {% if forloop.counter <= 5 %}
                                             <a href="{% url 'blog_show' %}?blogId={{ blog_post.id }}">
                                                 {{ blog_post.get_simple_title }}
                                             </a>
