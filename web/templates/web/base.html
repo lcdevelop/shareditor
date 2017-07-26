@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -9,12 +10,16 @@
     <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css">
     <script src="//cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
     <script src="//cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="{% static '/web/lrtk/lrtk.css' %}">
+    <script src="{% static '/web/lrtk/lrtk.js' %}"></script>
 
     <title>{% block title %}SharEDITor - 关注大数据技术{% endblock title %}</title>
     {% block head %}
     {% endblock head %}
 </head>
 <body>
+
+<div id="top"></div>
 
 <div class="row bg-primary" style="margin-right: 0">
     <div class="col-sm-1 col-xs-1"></div>

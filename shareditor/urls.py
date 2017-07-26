@@ -17,6 +17,7 @@ from django.conf.urls import url, include
 from django.conf.urls.static import static
 from django.conf import settings
 from django.contrib import admin
+from django.views.generic.base import TemplateView
 from web import views
 
 urlpatterns = [
@@ -26,6 +27,10 @@ urlpatterns = [
     url(r'^blogshow', views.blog_show, name='blog_show'),
     url(r'^ckeditor/', include('ckeditor_uploader.urls')),
     url(r'^uploader/body_upload', views.body_upload, name='body_upload'),
+    url(r'^chatbot/$', views.chatbot, name='chatbot'),
+    url(r'^chatbot/query', views.chatbot_query, name='chatbot'),
+    url(r'^robots.txt$', TemplateView.as_view(template_name='static/robots.txt')),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

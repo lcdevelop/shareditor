@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+import urllib2
+from urllib import quote
+import json
 from django.http import HttpResponse
 from django.shortcuts import render
 
@@ -59,3 +62,26 @@ def body_upload(request):
         if url:
             return render(request, 'web/body_upload.html', {'url': url})
     return HttpResponse('upload fail')
+
+
+def chatbot(request):
+    latest_blog_posts = BlogPost.objects.order_by('create_time')[0:5]
+    hottest_blog_posts = BlogPost.objects.order_by('pv').reverse()[0:5]
+    return render(request, 'web/chatbot.html', {'latest_blog_posts': latest_blog_posts,
+                                                      'hottest_blog_posts': hottest_blog_posts})
+
+
+def chatbot_query(request):
+    if 'input' in request.POST:
+        input = request.POST['input']
+        if input == '机器学习资料':
+            return HttpResponse('链接: https://pan.baidu.com/s/1nuL8Lfz 密码: eqtt')
+        else:
+            client_ip = request.META['REMOTE_ADDR']
+            url = 'http://182.92.80.220:8765/?q=' + quote(input.encode('utf-8')) + '&clientIp=' + client_ip
+            response = urllib2.urlopen(url)
+            json_obj = json.load(response)
+            total = json_obj['total']
+            if total > 0:
+                return HttpResponse(json_obj['result'][0]['answer'])
+    return HttpResponse('我快死了，快叫我主人救我！')

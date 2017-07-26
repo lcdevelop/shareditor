@@ -1,0 +1,218 @@
+{% extends "web/base.html" %}
+
+{% block title %}
+    小二兔聊天机器人
+{% endblock %}
+
+{% block head %}
+    <style type="text/css">
+    body {
+        background-color: RGB(31,31,31);
+        magin: 0;
+        padding: 0;
+    }
+    </style>
+
+    <script type="text/javascript" src="/static/ckeditor/ckeditor/ckeditor.js"></script>
+
+    <script>
+
+    var checkSystem = function () {
+        var uaMap = {
+            'android': /Android/i,
+            'ios': /(?:iPhone|iPad)/i
+        };
+        var ua = window.navigator.userAgent;
+        for (var i in uaMap) {
+            if (uaMap[i].test(ua)) {
+                return i;
+            }
+        }
+        return null;
+    };
+    var showleft = false;
+    var xmlHttp;
+
+    function submitByEnter() {
+        if(event.keyCode == 13)
+        {
+            submit();
+        }
+    }
+
+    function submit() {
+        if (window.ActiveXObject) {
+            xmlHttp = new ActiveXObject("Microsoft.XMLHTTP");
+        }
+        else if (window.XMLHttpRequest) {
+            xmlHttp = new XMLHttpRequest();
+        }
+        var input = $("#input").val().trim();
+        if (input == '') {
+            jQuery('#input').val('');
+            return;
+        }
+        addText(input, false);
+        jQuery('#input').val('');
+        jQuery('#info').html('机器人正在思考中,请稍后...');
+        var datastr = "input=" + input;
+        datastr = encodeURI(datastr);
+        var url = "/chatbot/query";
+        xmlHttp.open("POST", url, true);
+        xmlHttp.onreadystatechange = callback;
+        xmlHttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xmlHttp.send(datastr);
+    }
+
+    function callback() {
+        if (xmlHttp.readyState == 4 && xmlHttp.status == 200) {
+            var responseText = xmlHttp.responseText;
+            addText(responseText, true);
+            jQuery('#info').html('');
+        }
+    }
+
+    function addText(text, is_response) {
+        var oldText = CKEDITOR.instances.chatarea.getData();
+        oldText = oldText.substr(0, oldText.length - 7);
+        if (is_response && checkSystem() != 'ios' && checkSystem() != 'android') {
+            if (showleft == true) {
+                oldText = oldText.replace('nonurl', 'http://shareditor-shareditor.oss-cn-beijing.aliyuncs.com/dynamic/thumb_416_default_big.png');
+                jQuery('#rabbit-left').css('display', 'none');
+                showleft = false;
+            } else {
+                oldText = oldText.replace('http://shareditor-shareditor.oss-cn-beijing.aliyuncs.com/dynamic/thumb_416_default_big.png', 'nonurl');
+                jQuery('#rabbit-left').css('display', 'block');
+                showleft = true;
+            }
+        }
+        var prefix = '';
+        if (is_response) {
+            prefix = "<div style='color: blue; text-align: left; padding: 5px;'>小二兔: "
+        } else {
+            prefix = "<div style='color: darkgreen; text-align: right; padding: 5px;'>我: "
+        }
+        CKEDITOR.instances.chatarea.setData(oldText + "" + prefix + text + "</div></div>");
+
+        window.setTimeout(scrollDown, 50);
+    }
+
+    function scrollDown() {
+        var editor = CKEDITOR.instances.chatarea;
+        var jqDocument = $(editor.document.$);
+        var documentHeight = jqDocument.height();
+        jqDocument.scrollTop(documentHeight);
+    }
+
+    </script>
+{% endblock %}
+
+{% block body %}
+
+    <br />
+    <div class="row" style="margin:0;">
+        <div class="col-sm-2 col-xs-1"></div>
+        <div class="col-sm-4 col-xs-10">
+            <div id="rabbit-left" style="position: absolute;left: -50px; top: 400px;display: none;">
+                <img width="50px" height="62px" src="http://shareditor-shareditor.oss-cn-beijing.aliyuncs.com/dynamic/thumb_415_default_big.png"/>
+            </div>
+            <div class="row">
+            <textarea id="chatarea" style="background-color: #00A6C7">
+                <div id="container-div" style="padding:10px;padding-top: 50px;
+                background-image:url(http://shareditor-shareditor.oss-cn-beijing.aliyuncs.com/dynamic/thumb_416_default_big.png);
+                background-repeat:no-repeat;
+                background-position:left top;
+                background-blend-mode:normal;
+                background-attachment:fixed;
+                background-size:61px 50px;
+                background-position: 20px 0px">
+                    <div style='color: blue; text-align: left; padding: 5px;'>小二兔: 喂，大哥您好，您终于肯跟我聊天了,来侃侃呗,我来者不拒!</div>
+                    <div style='color: blue; text-align: left; padding: 5px;'>小二兔: 啥?你问我怎么这么聪明会聊天?因为我刚刚吃了一堆影视剧字幕!</div>
+                </div>
+            </textarea>
+            </div>
+
+            <div id="info" style="color: #FFFFFF; height:20px;"></div>
+            <br/>
+            <div class="row">
+                <div class="input-group">
+                    <input type="text" id="input" class="form-control" autofocus="autofocus"
+                           onkeydown="submitByEnter()"/>
+                    <span class="input-group-btn">
+                <button class="btn btn-default" type="button" onclick="submit()">发送</button>
+              </span>
+                </div>
+            </div>
+            <br/>
+            <div style="color: #959595; height:20px;"><a target="_blank"
+                                                         href="/blogshow/?blogId=112">点击直接获取字幕语料库</a>
+            </div>
+            <div class="hidden-xs" style="color: #959595; height:20px;">觉得小二兔还有些答非所问?你也可以参照右面的文章自己训练一个</div>
+
+        </div>
+        <div class="col-sm-4 hidden-xs">
+
+            <div class="row">
+                <div class="col-sm-4">
+                    <h4 style="color: #FFFFFF; border-bottom: 1px solid #695d69; padding-bottom: 10px; margin-top: 10px;">
+                        官方微信公众号
+                    </h4>
+                    <a href="http://shareditor-shareditor.oss-cn-beijing.aliyuncs.com/dynamic/weixinpub.jpg"
+                       target="_blank"
+                    >
+                        <img src="http://shareditor-shareditor.oss-cn-beijing.aliyuncs.com/dynamic/weixinpub.jpg" width="100%" height="100%"
+                             style=""/>
+                    </a>
+                </div>
+                <div class="col-sm-1">
+                    <a href="https://github.com/warmheartli"
+                       target="_blank"
+                    >
+                        <div class="fa fa-github fa-3x" style="margin-top: 100px;"></div>
+                    </a>
+                </div>
+
+                <div class="col-sm-1">
+                    <a href="http://weibo.com/chuangwanglaile"
+                       target="_blank"
+                    >
+                        <div class="fa fa-weibo fa-3x" style="margin-top: 100px;"></div>
+                    </a>
+                </div>
+                <div class="col-sm-2"></div>
+            </div>
+        </div>
+        <div class="col-sm-2 col-xs-1"></div>
+    </div>
+
+    <br />
+
+    <script type="text/javascript">
+
+
+    if (checkSystem() == 'ios' || checkSystem() == 'android') {
+        CKEDITOR.replace('chatarea',
+                {
+                    readOnly: true,
+                    toolbar: ['Source'],
+                    height: 200,
+                    removePlugins: 'elementspath',
+                    resize_enabled: false,
+                    allowedContent: true
+                });
+    } else {
+        CKEDITOR.replace('chatarea',
+                {
+                    readOnly: true,
+                    toolbar: ['Source'],
+                    height: 500,
+                    removePlugins: 'elementspath',
+                    resize_enabled: false,
+                    allowedContent: true
+                });
+    }
+
+    CKEDITOR.addCss('body{margin:0px;}');
+</script>
+
+{% endblock %}
