@@ -6,21 +6,22 @@
 
 {% block body %}
 
-    <div class="row" style="margin-right: 0">
-        <div class="col-sm-3 col-xs-1"></div>
-        <div class="col-sm-6 col-xs-10">
+    <div class="row" style="margin: 0;">
+        <div class="col-sm-3 hidden-xs"></div>
+        <div class="col-sm-6 col-xs-12">
             <h1>{{ tag_name }}</h1>
         </div>
-        <div class="col-sm-3 col-xs-1"></div>
+        <div class="col-sm-3 hidden-xs"></div>
     </div>
     <br />
-    <div class="row" style="margin-right: 0">
-        <div class="col-sm-3 col-xs-1"></div>
-        <div class="col-sm-6 col-xs-10">
+    <div class="row" style="margin: 0;">
+        <div class="col-sm-3 hidden-xs"></div>
+        <div class="col-sm-6 col-xs-12">
             {% for blog_post in blog_posts %}
-                <h4><a href="{% url 'blog_show' %}?blogId={{ blog_post.id }}">{{ blog_post }}</a>({{ blog_post.create_time|date:'m-d' }})</h4>
+                <h4 style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"><a href="{% url 'blog_show' %}?blogId={{ blog_post.id }}">{{ blog_post.get_simple_title }}</a></h4>
             {% endfor %}
         </div>
+        <div class="col-sm-3 hidden-xs"></div>
     </div>
     <br />
 

@@ -53,7 +53,6 @@ def blog_show(request):
 
 
 def body_upload(request):
-    print request.FILES
     if 'upload' in request.FILES:
         image_name = request.FILES['upload'].name
         image_content = request.FILES['upload'].read()
