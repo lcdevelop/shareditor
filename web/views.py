@@ -75,11 +75,28 @@ def chatbot(request):
                                                       'hottest_blog_posts': hottest_blog_posts})
 
 
+# 加载配好的qa词典
+def load_qa_dict():
+    ret = {}
+    qa_data = open(os.path.join(settings.BASE_DIR, 'web/static/web/dict/qa'), "rb").readlines()
+    for qa_line in qa_data:
+        qa_line = qa_line.strip()
+        split = qa_line.decode('utf-8').split(' ')
+        if len(split) > 1:
+            question = split[0]
+            answer = ' '.join(split[1:])
+            ret[question] = answer
+
+    return ret
+
+qa_dict = load_qa_dict()
+
+
 def chatbot_query(request):
     if 'input' in request.POST:
         input = request.POST['input']
-        if input == '机器学习资料':
-            return HttpResponse('链接: https://pan.baidu.com/s/1nuL8Lfz 密码: eqtt')
+        if qa_dict.has_key(input):
+            return HttpResponse(qa_dict.get(input))
         else:
             client_ip = request.META['REMOTE_ADDR']
             url = 'http://182.92.80.220:8765/?q=' + quote(input.encode('utf-8')) + '&clientIp=' + client_ip
