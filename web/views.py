@@ -3,14 +3,18 @@ from __future__ import unicode_literals
 
 import urllib2
 from urllib import quote
+import os
 import json
+import re
 from django.http import HttpResponse
 from django.shortcuts import render
+from django.conf import settings
 
 from commons.ossutils import upload_oss
 from models import BlogPost, Subject, Tag
 
 BucketName = 'shareditor-shareditor'
+report_url_pattern = re.compile(r'.*blogId=(\d+).*')
 
 
 def index(request):
@@ -85,3 +89,16 @@ def chatbot_query(request):
             if total > 0:
                 return HttpResponse(json_obj['result'][0]['answer'])
     return HttpResponse('我快死了，快叫我主人救我！')
+
+
+def report_pv(request):
+    if 'url' in request.GET:
+        url = request.GET['url']
+        m = re.match(report_url_pattern, url)
+        if m:
+            blog_id = int(m.group(1))
+            blog = BlogPost.objects.get(id=blog_id)
+            blog.pv = blog.pv + 1
+            blog.save()
+    image_data = open(os.path.join(settings.BASE_DIR, 'web/static/web/images/onepixel.gif'), "rb").read()
+    return HttpResponse(image_data, content_type="image/gif")

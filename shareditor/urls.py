@@ -30,6 +30,7 @@ urlpatterns = [
     url(r'^chatbot/$', views.chatbot, name='chatbot'),
     url(r'^chatbot/query', views.chatbot_query, name='chatbot'),
     url(r'^robots.txt$', TemplateView.as_view(template_name='static/robots.txt')),
+    url(r'^report/pv.gif$', views.report_pv, name='report_pv'),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
