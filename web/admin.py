@@ -42,7 +42,7 @@ class SubjectAdmin(admin.ModelAdmin):
 
 
 class TagAdmin(admin.ModelAdmin):
-    list_display = ('name',)
+    list_display = ('name', 'sort',)
 
     def save_model(self, request, obj, form, change):
         if 'image' in request.FILES:

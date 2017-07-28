@@ -18,7 +18,7 @@ report_url_pattern = re.compile(r'.*blogId=(\d+).*')
 
 
 def index(request):
-    tags = Tag.objects.all()
+    tags = Tag.objects.order_by('sort').reverse()
     latest_blog_posts = BlogPost.objects.order_by('create_time').reverse()[0:5]
     hottest_blog_posts = BlogPost.objects.order_by('pv').reverse()[0:5]
     return render(request, 'web/index.html', {'tags': tags, 'latest_blog_posts': latest_blog_posts,

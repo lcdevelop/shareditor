@@ -162,5 +162,6 @@ CKEDITOR_CONFIGS = {
         ]),
         'codeSnippet_theme': 'atelier-dune.dark',
         'filebrowserUploadUrl': '/uploader/body_upload',
+        'autoGrow_maxHeight': 500,
     }
 }
