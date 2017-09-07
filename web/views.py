@@ -42,7 +42,7 @@ def blog_show(request):
     if 'blogId' in request.GET:
         blog_id = request.GET['blogId']
         blog_post = BlogPost.objects.get(id=blog_id)
-        latest_blog_posts = BlogPost.objects.filter(verify=True).order_by('create_time')[0:5]
+        latest_blog_posts = BlogPost.objects.filter(verify=True).order_by('create_time').reverse()[0:5]
         hottest_blog_posts = BlogPost.objects.filter(verify=True).order_by('pv').reverse()[0:5]
         tag_blog_posts = BlogPost.objects.filter(verify=True, tags__name=blog_post.tags.first())
         tags = Tag.objects.all()
