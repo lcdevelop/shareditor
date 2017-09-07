@@ -23,7 +23,7 @@ class Tag(models.Model):
     sort = models.IntegerField(verbose_name='排序越大越靠前', default=0)
 
     def get_latest_blogpost(self, count=5):
-        return self.blogpost_set.order_by('id').reverse()[0:count]
+        return self.blogpost_set.filter(verify=True).order_by('id').reverse()[0:count]
 
     class Meta:
         verbose_name_plural = '标签'
@@ -42,6 +42,7 @@ class BlogPost(models.Model):
     subject = models.ForeignKey(Subject, verbose_name='类别', null=True)
     tags = models.ManyToManyField(Tag, verbose_name='标签', null=True)
     pv = models.IntegerField(verbose_name='pv', default=0)
+    verify = models.BooleanField(verbose_name='是否生效', default=False)
 
     def get_simple_title(self):
         return self.title.replace(self.tags.first().name, '')
