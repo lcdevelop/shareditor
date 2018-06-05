@@ -57,6 +57,7 @@
         jQuery('#info').html('机器人正在思考中,请稍后...');
 
         $.ajax({
+          type: 'POST',
           url: '/chatbot/query',
           data: {
             input: input
