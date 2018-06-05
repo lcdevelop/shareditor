@@ -7,11 +7,15 @@
 {% block head %}
   <script type="text/javascript" src="/static/ckeditor/ckeditor/ckeditor.js"></script>
   <style>
-    .container {
-      max-width: 600px;
-      height: 500px;
-      padding-top: 20px;
-    }
+  body {
+    background-color: RGB(31, 31, 31);
+  }
+
+  .container {
+    max-width: 600px;
+    height: 500px;
+    padding-top: 20px;
+  }
 
   #send:hover {
     cursor: pointer;
@@ -49,6 +53,21 @@
         }
         addText(input, false);
         jQuery('#input').val('');
+
+        jQuery('#info').html('机器人正在思考中,请稍后...');
+
+        $.ajax({
+          url: '/chatbot/query',
+          data: {
+            input: input
+          },
+          success: callback
+        });
+    }
+
+    function callback(res) {
+        addText(res, true);
+        jQuery('#info').html('');
     }
 
     function addText(text, is_response) {
