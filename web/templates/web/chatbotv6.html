@@ -74,7 +74,7 @@
     function addText(text, is_response) {
       console.log('addText:' + text);
         var oldText = CKEDITOR.instances.chatarea.getData();
-        oldText = oldText.substr(0, oldText.length - 7);
+        oldText = oldText.substr(0, oldText.length - 6);
         if (is_response && checkSystem() != 'ios' && checkSystem() != 'android') {
           showleft = !showleft;
         }
