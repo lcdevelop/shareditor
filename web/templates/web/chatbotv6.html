@@ -72,7 +72,7 @@
     }
 
     function addText(text, is_response) {
-      console.log('addText' + text);
+      console.log('addText:' + text);
         var oldText = CKEDITOR.instances.chatarea.getData();
         oldText = oldText.substr(0, oldText.length - 7);
         if (is_response && checkSystem() != 'ios' && checkSystem() != 'android') {
@@ -84,7 +84,10 @@
         } else {
             prefix = "<div style='color: darkgreen; text-align: right; padding: 5px;'>我: "
         }
-        CKEDITOR.instances.chatarea.setData(oldText + "" + prefix + text + "</div></div>");
+        console.log('oldText:' + oldText);
+        var newText = oldText + "" + prefix + text + "</div></div>"
+      console.log('newText:' + newText);
+        CKEDITOR.instances.chatarea.setData(newText);
 
         window.setTimeout(scrollDown, 50);
     }
