@@ -1,0 +1,124 @@
+{% extends "web/base.html" %}
+
+{% block title %}
+  小二兔聊天机器人
+{% endblock %}
+
+{% block head %}
+  <script type="text/javascript" src="/static/ckeditor/ckeditor/ckeditor.js"></script>
+  <style>
+    .container {
+      max-width: 600px;
+      height: 500px;
+      padding-top: 20px;
+    }
+
+  #send:hover {
+    cursor: pointer;
+  }
+  </style>
+
+  <script>
+    var showleft = false;
+
+    var checkSystem = function () {
+      var uaMap = {
+        'android': /Android/i,
+        'ios': /(?:iPhone|iPad)/i
+      };
+      var ua = window.navigator.userAgent;
+      for (var i in uaMap) {
+        if (uaMap[i].test(ua)) {
+          return i;
+        }
+      }
+      return null;
+    };
+
+    function submitByEnter() {
+      if (event.keyCode == 13) {
+        submit();
+      }
+    }
+
+    function submit() {
+      var input = $("#input").val().trim();
+        if (input == '') {
+            jQuery('#input').val('');
+            return;
+        }
+        addText(input, false);
+        jQuery('#input').val('');
+    }
+
+    function addText(text, is_response) {
+        var oldText = CKEDITOR.instances.chatarea.getData();
+        oldText = oldText.substr(0, oldText.length - 7);
+        if (is_response && checkSystem() != 'ios' && checkSystem() != 'android') {
+          showleft = !showleft;
+        }
+        var prefix = '';
+        if (is_response) {
+            prefix = "<div style='color: blue; text-align: left; padding: 5px;'>小二兔: "
+        } else {
+            prefix = "<div style='color: darkgreen; text-align: right; padding: 5px;'>我: "
+        }
+        CKEDITOR.instances.chatarea.setData(oldText + "" + prefix + text + "</div></div>");
+
+        window.setTimeout(scrollDown, 50);
+    }
+
+    function scrollDown() {
+        var editor = CKEDITOR.instances.chatarea;
+        var jqDocument = $(editor.document.$);
+        var documentHeight = jqDocument.height();
+        jqDocument.scrollTop(documentHeight);
+    }
+  </script>
+{% endblock %}
+
+{% block body %}
+
+  <div class="container">
+    <textarea id="chatarea">
+    </textarea>
+
+    <br>
+
+    <div class="form-group">
+      <div class="input-group">
+        <input type="text" class="form-control" id="input"
+               placeholder="" autofocus="autofocus" onkeydown="submitByEnter()">
+        <div id="send" class="input-group-addon" onmouseover="" style="cursor:hand" onclick="submit()">发送
+      </div>
+    </div>
+  </div>
+  </div>
+
+  <script type="text/javascript">
+    if (checkSystem() == 'ios' || checkSystem() == 'android') {
+      CKEDITOR.replace('chatarea',
+          {
+            readOnly: true,
+            toolbar: ['Source'],
+            height: 200,
+            removePlugins: 'elementspath',
+            resize_enabled: false,
+            allowedContent: true
+          });
+    } else {
+      CKEDITOR.replace('chatarea',
+          {
+            readOnly: true,
+            toolbar: ['Source'],
+            height: 400,
+            removePlugins: 'elementspath',
+            resize_enabled: false,
+            allowedContent: true
+          });
+    }
+
+    CKEDITOR.addCss('body{margin:0px;}');
+  </script>
+
+{% endblock %}

@@ -119,3 +119,10 @@ def report_pv(request):
             blog.save()
     image_data = open(os.path.join(settings.BASE_DIR, 'web/static/web/images/onepixel.gif'), "rb").read()
     return HttpResponse(image_data, content_type="image/gif")
+
+
+def chatbotv6(request):
+    latest_blog_posts = BlogPost.objects.order_by('create_time')[0:5]
+    hottest_blog_posts = BlogPost.objects.order_by('pv').reverse()[0:5]
+    return render(request, 'web/chatbotv6.html', {'latest_blog_posts': latest_blog_posts,
+                                                'hottest_blog_posts': hottest_blog_posts})
