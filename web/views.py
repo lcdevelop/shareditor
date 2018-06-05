@@ -69,6 +69,11 @@ def body_upload(request):
 
 
 def chatbot(request):
+    """
+    废弃
+    :param request:
+    :return:
+    """
     latest_blog_posts = BlogPost.objects.order_by('create_time')[0:5]
     hottest_blog_posts = BlogPost.objects.order_by('pv').reverse()[0:5]
     return render(request, 'web/chatbot.html', {'latest_blog_posts': latest_blog_posts,

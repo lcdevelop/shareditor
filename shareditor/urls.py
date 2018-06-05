@@ -27,7 +27,7 @@ urlpatterns = [
     url(r'^blogshow', views.blog_show, name='blog_show'),
     url(r'^ckeditor/', include('ckeditor_uploader.urls')),
     url(r'^uploader/body_upload', views.body_upload, name='body_upload'),
-    url(r'^chatbot/$', views.chatbot, name='chatbot'),
+    url(r'^chatbot/$', views.chatbotv6, name='chatbot'),
     url(r'^chatbotv6/$', views.chatbotv6, name='chatbotv6'),
     url(r'^chatbot/query', views.chatbot_query, name='chatbot'),
     url(r'^robots.txt$', TemplateView.as_view(template_name='static/robots.txt')),
