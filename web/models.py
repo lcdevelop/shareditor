@@ -54,3 +54,8 @@ class BlogPost(models.Model):
         return self.title
 
 
+class Chat(models.Model):
+    client_ip = models.CharField(max_length=16, verbose_name='用户ip')
+    message = models.TextField(verbose_name='说的话')
+    talker = models.IntegerField(verbose_name='说话者:0-机器人;1-用户')
+    create_time = models.DateTimeField(verbose_name='创建时间', auto_now_add=True)

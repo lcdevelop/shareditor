@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+import random
 import urllib2
 from urllib import quote
 import os
@@ -11,7 +12,7 @@ from django.shortcuts import render
 from django.conf import settings
 
 from commons.ossutils import upload_oss
-from models import BlogPost, Subject, Tag
+from models import BlogPost, Subject, Tag, Chat
 
 BucketName = 'shareditor-shareditor'
 report_url_pattern = re.compile(r'.*blogId=(\d+).*')
@@ -97,19 +98,40 @@ def load_qa_dict():
 qa_dict = load_qa_dict()
 
 
+def __store_chat(request, talker, message):
+    client_ip = request.META['REMOTE_ADDR']
+    chat = Chat(client_ip=client_ip, message=message, talker=talker)
+    chat.save()
+
+
+def __select_random_question():
+    chats = Chat.objects.filter(talker=1)
+    chat = chats[random.randint(0, chats.count()-1)]
+    return chat.message
+
+
 def chatbot_query(request):
     if 'input' in request.POST:
+        client_ip = request.META['REMOTE_ADDR']
         input = request.POST['input']
+        __store_chat(request, 1, input)
         if qa_dict.has_key(input):
-            return HttpResponse(qa_dict.get(input))
+            answer = qa_dict.get(input)
+            __store_chat(request, 0, answer)
+            question = __select_random_question()
+            __store_chat(request, 0, question)
+            return HttpResponse(answer + '|' + question)
         else:
-            client_ip = request.META['REMOTE_ADDR']
             url = 'http://182.92.80.220:8765/?q=' + quote(input.encode('utf-8')) + '&clientIp=' + client_ip
             response = urllib2.urlopen(url)
             json_obj = json.load(response)
             total = json_obj['total']
             if total > 0:
-                return HttpResponse(json_obj['result'][0]['answer'])
+                answer = json_obj['result'][0]['answer']
+                __store_chat(request, 0, answer)
+                question = __select_random_question()
+                __store_chat(request, 0, question)
+                return HttpResponse(answer + '|' + question)
     return HttpResponse('我快死了，快叫我主人救我！')
 
 

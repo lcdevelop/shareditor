@@ -7,19 +7,19 @@
 {% block head %}
   <script type="text/javascript" src="/static/ckeditor/ckeditor/ckeditor.js"></script>
   <style>
-  body {
-    background-color: RGB(31, 31, 31);
-  }
+    body {
+      background-color: RGB(31, 31, 31);
+    }
 
-  .container {
-    max-width: 600px;
-    height: 500px;
-    padding-top: 20px;
-  }
+    .container {
+      max-width: 600px;
+      height: 500px;
+      padding-top: 20px;
+    }
 
-  #send:hover {
-    cursor: pointer;
-  }
+    #send:hover {
+      cursor: pointer;
+    }
   </style>
 
   <script>
@@ -47,56 +47,68 @@
 
     function submit() {
       var input = $("#input").val().trim();
-        if (input == '') {
-            jQuery('#input').val('');
-            return;
-        }
-        addText(input, false);
+      if (input == '') {
         jQuery('#input').val('');
+        return;
+      }
+      addText(input, false, query, input);
+    }
 
-        jQuery('#info').html('机器人正在思考中,请稍后...');
+    function query(input) {
+      jQuery('#input').val('');
 
-        $.ajax({
-          type: 'POST',
-          url: '/chatbot/query',
-          data: {
-            input: input
-          },
-          success: callback
-        });
+      jQuery('#info').html('机器人正在思考中,请稍后...');
+
+      $.ajax({
+        type: 'POST',
+        url: '/chatbot/query',
+        data: {
+          input: input
+        },
+        success: callback
+      });
     }
 
     function callback(res) {
-        addText(res, true);
-        jQuery('#info').html('');
+      // CKEDITOR的setData是异步的，所以只能通过回调来写第二句
+      var ansque = res.split('|');
+      addText(ansque[0], true, addNext, ansque[1]);
+
+      jQuery('#info').html('');
     }
 
-    function addText(text, is_response) {
-      console.log('addText:' + text);
-        var oldText = CKEDITOR.instances.chatarea.getData();
-        oldText = oldText.substr(0, oldText.length - 7);
-        if (is_response && checkSystem() != 'ios' && checkSystem() != 'android') {
-          showleft = !showleft;
-        }
-        var prefix = '';
-        if (is_response) {
-            prefix = "<div style='color: blue; text-align: left; padding: 5px;'>小二兔: "
-        } else {
-            prefix = "<div style='color: darkgreen; text-align: right; padding: 5px;'>我: "
-        }
-        console.log('oldText:' + oldText);
-        var newText = oldText + "" + prefix + text + "</div></div>"
-      console.log('newText:' + newText);
-        CKEDITOR.instances.chatarea.setData(newText);
+    function addNext(text) {
+      addText(text, true);
+    }
 
-        window.setTimeout(scrollDown, 50);
+    function addText(text, is_response, next_call, arg) {
+      console.log(next_call);
+      var oldText = CKEDITOR.instances.chatarea.getData();
+      oldText = oldText.substr(0, oldText.length - 7);
+      if (is_response && checkSystem() != 'ios' && checkSystem() != 'android') {
+        showleft = !showleft;
+      }
+      var prefix = '';
+      if (is_response) {
+        prefix = "<div style='color: blue; text-align: left; padding: 5px;'>小二兔: ";
+      } else {
+        prefix = "<div style='color: darkgreen; text-align: right; padding: 5px;'>我: ";
+      }
+      var newText = oldText + "" + prefix + text + "</div></div>";
+      CKEDITOR.instances.chatarea.setData(newText, function () {
+        if (next_call) {
+          next_call(arg);
+        }
+      });
+
+      window.setTimeout(scrollDown, 50);
     }
 
     function scrollDown() {
-        var editor = CKEDITOR.instances.chatarea;
-        var jqDocument = $(editor.document.$);
-        var documentHeight = jqDocument.height();
-        jqDocument.scrollTop(documentHeight);
+      var editor = CKEDITOR.instances.chatarea;
+      var jqDocument = $(editor.document.$);
+      var documentHeight = jqDocument.height();
+      jqDocument.scrollTop(documentHeight);
     }
   </script>
 {% endblock %}
@@ -124,6 +136,8 @@
     </div>
     <div class="hidden-xs" style="color: #959595; height:20px;">觉得小二兔还有些答非所问?你也可以参照下面的文章自己训练一个</div>
   </div>
+
+  <div id="event-trigger" onclick="addText('hello', true)"></div>
 
 
   <script type="text/javascript">
