@@ -137,9 +137,6 @@
     <div class="hidden-xs" style="color: #959595; height:20px;">觉得小二兔还有些答非所问?你也可以参照下面的文章自己训练一个</div>
   </div>
 
-  <div id="event-trigger" onclick="addText('hello', true)"></div>
-
-
   <script type="text/javascript">
     if (checkSystem() == 'ios' || checkSystem() == 'android') {
       CKEDITOR.replace('chatarea',
@@ -164,6 +161,8 @@
     }
 
     CKEDITOR.addCss('body{margin:0px;}');
+
+    addText('<span style="color: red;">告诉你个小技巧：只有认真回答我的问题，我才会认真回答你的问题</span>', true);
   </script>
 
 {% endblock %}
