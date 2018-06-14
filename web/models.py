@@ -59,3 +59,22 @@ class Chat(models.Model):
     message = models.TextField(verbose_name='说的话')
     talker = models.IntegerField(verbose_name='说话者:0-机器人;1-用户')
     create_time = models.DateTimeField(verbose_name='创建时间', auto_now_add=True)
+
+
+class CorpusQuestion(models.Model):
+    text = models.CharField(max_length=512, verbose_name='问')
+    bad = models.IntegerField(verbose_name='踩', default=0)
+    is_del = models.IntegerField(verbose_name='1-删除；0-正常', default=0)
+
+    def __unicode__(self):
+        return self.text
+
+
+class CorpusAnswer(models.Model):
+    text = models.CharField(max_length=512, verbose_name='答')
+    like = models.IntegerField(verbose_name='点赞量', default=0)
+    is_del = models.IntegerField(verbose_name='1-删除；0-正常', default=0)
+    question = models.ForeignKey(CorpusQuestion, verbose_name='问题')
+
+    def __unicode__(self):
+        return self.text

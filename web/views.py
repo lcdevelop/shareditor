@@ -12,7 +12,7 @@ from django.shortcuts import render
 from django.conf import settings
 
 from commons.ossutils import upload_oss
-from models import BlogPost, Subject, Tag, Chat
+from models import BlogPost, Subject, Tag, Chat, CorpusQuestion, CorpusAnswer
 
 BucketName = 'shareditor-shareditor'
 report_url_pattern = re.compile(r'.*blogId=(\d+).*')
@@ -95,6 +95,7 @@ def load_qa_dict():
 
     return ret
 
+
 qa_dict = load_qa_dict()
 
 
@@ -135,6 +136,11 @@ def chatbot_query(request):
     return HttpResponse('我快死了，快叫我主人救我！')
 
 
+def chatbot_querytest(request):
+    input = request.GET['input']
+    return HttpResponse(input)
+
+
 def report_pv(request):
     if 'url' in request.GET:
         url = request.GET['url']
@@ -151,5 +157,48 @@ def report_pv(request):
 def chatbotv6(request):
     latest_blog_posts = BlogPost.objects.order_by('create_time')[0:5]
     hottest_blog_posts = BlogPost.objects.order_by('pv').reverse()[0:5]
+
+    question_count = CorpusQuestion.objects.count()
+
+    question = None
+    answers = None
+    retry = 0
+    while True:
+        if retry > 20:
+            break
+        question = CorpusQuestion.objects.all()[random.randint(0, question_count-1)]
+        answers = CorpusAnswer.objects.filter(question=question)
+        if answers.count() >= 3:
+            break
+
     return render(request, 'web/chatbotv6.html', {'latest_blog_posts': latest_blog_posts,
-                                                'hottest_blog_posts': hottest_blog_posts})
+                                                'hottest_blog_posts': hottest_blog_posts,
+                                                  'question': question, 'answers': answers})
+
+
+def bad_question(request):
+    if 'question_id' in request.POST:
+        question_id = request.POST['question_id']
+        question = CorpusQuestion.objects.get(id=question_id)
+        question.bad += 1
+        question.save()
+    return HttpResponse('{"code": 0}')
+
+
+def like_answer(request):
+    if 'answer_id' in request.POST:
+        answer_id = request.POST['answer_id']
+        answer = CorpusAnswer.objects.get(id=answer_id)
+        answer.like += 1
+        answer.save()
+    return HttpResponse('{"code": 0}')
+
+
+def udf_answer(request):
+    if 'question_id' in request.POST and 'answer' in request.POST:
+        question_id = request.POST['question_id']
+        answer = request.POST['answer']
+        if not CorpusAnswer.objects.filter(question_id=question_id, text=answer).exists():
+            corpus_answer = CorpusAnswer(text=answer, question_id=question_id, like=0, is_del=0)
+            corpus_answer.save()
+    return HttpResponse('{"code": 0}')
