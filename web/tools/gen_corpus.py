@@ -14,7 +14,8 @@ def construct_connection():
                            user='lichuang',
                            passwd='fucking@2Bh8j1@m@uG',
                            db='db_shareditor',
-                           port=3306)
+                           port=3306,
+                           charset='utf8')
     cur = conn.cursor()
 
 
