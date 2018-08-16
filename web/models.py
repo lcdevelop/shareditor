@@ -21,6 +21,7 @@ class Tag(models.Model):
     name = models.CharField(max_length=255, verbose_name='标签名称')
     image = models.ImageField(max_length=255, verbose_name='标签图片', null=True)
     sort = models.IntegerField(verbose_name='排序越大越靠前', default=0)
+    show = models.IntegerField(verbose_name='是否展示在首页', default=1)
 
     def get_latest_blogpost(self, count=5):
         return self.blogpost_set.filter(verify=True).order_by('id').reverse()[0:count]
